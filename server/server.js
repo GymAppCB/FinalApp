@@ -1,44 +1,29 @@
 // server/server.js
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors'); // We still need the package, but will use it differently
+const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// --- CRITICAL FIX: Manual CORS Middleware ---
-// This custom middleware will be the very first thing to run for any request.
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    'http://localhost:3000',
-    'https://sensational-kulfi-8b5359.netlify.app'
-  ];
-  const origin = req.headers.origin;
+// --- CORS Configuration (The Final, Simplified Approach) ---
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://sensational-kulfi-8b5359.netlify.app'
+];
 
-  // Check if the request origin is in our allowlist
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  
-  // Set other necessary CORS headers
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  // If this is a preflight (OPTIONS) request, end the request here with a 204 No Content status.
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(204);
-  }
-
-  // Otherwise, continue to the next middleware/route handler.
-  next();
-});
+// This is the most standard and reliable way to configure CORS.
+// It automatically handles the preflight OPTIONS request.
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 
 
 // --- Standard Middleware ---
-// We no longer need app.use(cors()) here because we are handling it manually above.
+// This MUST come AFTER the cors middleware.
 app.use(express.json());
 
 
@@ -53,6 +38,7 @@ mongoose.connect(MONGO_URI)
 .catch(err => console.error('MongoDB connection error:', err));
 
 // --- API Routes ---
+// These also MUST come AFTER the cors middleware.
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/clients', require('./routes/clients'));
 app.use('/api/activities', require('./routes/activities'));
