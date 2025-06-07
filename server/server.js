@@ -1,43 +1,46 @@
 // server/server.js
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const cors = require('cors'); // We still need the package, but will use it differently
 const path = require('path');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// --- CORS Configuration ---
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://sensational-kulfi-8b5359.netlify.app'
-];
+// --- CRITICAL FIX: Manual CORS Middleware ---
+// This custom middleware will be the very first thing to run for any request.
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'https://sensational-kulfi-8b5359.netlify.app'
+  ];
+  const origin = req.headers.origin;
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true, // Allows cookies to be sent
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly allow methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly allow headers
-};
+  // Check if the request origin is in our allowlist
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  
+  // Set other necessary CORS headers
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', true);
 
-// --- CRITICAL FIX: Handle Preflight Requests ---
-// The browser sends an OPTIONS request first for complex requests like POST.
-// We need to handle it and send back the correct headers.
-app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
+  // If this is a preflight (OPTIONS) request, end the request here with a 204 No Content status.
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
 
-// Now, use the CORS middleware for all other requests
-app.use(cors(corsOptions));
+  // Otherwise, continue to the next middleware/route handler.
+  next();
+});
 
 
 // --- Standard Middleware ---
+// We no longer need app.use(cors()) here because we are handling it manually above.
 app.use(express.json());
+
 
 // --- Database Connection ---
 const MONGO_URI = process.env.MONGO_URI;
