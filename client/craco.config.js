@@ -1,18 +1,31 @@
 // client/craco.config.js
-
-// THE FIX: The plugin is the default export, not a named export.
-const CracoWorkboxPlugin = require('craco-workbox');
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
+const path = require('path');
 
 module.exports = {
-  // The webpack configuration is not needed for the default setup.
-  // The plugins array at the top level is the correct structure for craco.
-  plugins: [
-    {
-      plugin: CracoWorkboxPlugin,
-      // We don't need to pass options if we are using the default file names:
-      // swSrc: 'src/custom-service-worker.js' (or public/)
-      // swDest: 'service-worker.js'
-      // craco-workbox is smart enough to find these.
+  webpack: {
+    configure: (webpackConfig, { env, paths }) => {
+      // Only add the Workbox plugin in production builds
+      if (env === 'production') {
+        // Find the existing GenerateSW plugin added by Create React App
+        const generateSwPlugin = webpackConfig.plugins.find(
+          (plugin) => plugin.constructor.name === 'GenerateSW'
+        );
+
+        // If the default plugin exists, replace it with our custom InjectManifest
+        if (generateSwPlugin) {
+          webpackConfig.plugins.splice(
+            webpackConfig.plugins.indexOf(generateSwPlugin),
+            1,
+            new WorkboxWebpackPlugin.InjectManifest({
+              swSrc: path.resolve(__dirname, 'public', 'custom-service-worker.js'),
+              swDest: 'service-worker.js',
+            })
+          );
+        }
+      }
+
+      return webpackConfig;
     },
-  ],
+  },
 };
