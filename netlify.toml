@@ -1,22 +1,14 @@
-# client/netlify.toml
+# In ROOT directory: netlify.toml
 
-# ==================================================
-#  THIS IS THE NEW TEST RULE
-# ==================================================
-[[redirects]]
-  from = "/test"
-  to = "https://www.google.com"
-  status = 302 # This is a temporary redirect
-# ==================================================
-
-# This is the original proxy rule
+# API proxy rule - This MUST come first.
 [[redirects]]
   from = "/api/*"
-  to = "https://gympro-api.onrender.com/api/:splat"
+  # THIS IS THE CORRECTED URL
+  to = "https://gymapp-yqzc.onrender.com/api/:splat" 
   status = 200
   force = true 
 
-# This is the SPA fallback rule
+# SPA fallback rule - This MUST come last.
 [[redirects]]
   from = "/*"
   to = "/index.html"
