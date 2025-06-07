@@ -53,6 +53,15 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get('/', (req, res) => {
   res.send('GymPro API is running.');
 });
+app.get('/', (req, res) => {
+  res.status(200).send('GymPro API is running and healthy.');
+});
+app.get('/', (req, res) => {
+  res.status(200).send('GymPro API is running and healthy.');
+});
+app.listen(PORT, () => {
+  console.log(`🚀 Server is now listening on port ${PORT}`);
+});
 
 // --- Start Server ---
 app.listen(PORT, () => {
