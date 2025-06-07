@@ -1,40 +1,11 @@
 {
-  "name": "gym-management-pwa",
+  "name": "gym-management-pwa-monorepo",
   "version": "1.0.0",
-  "description": "PWA completa para gestão de ginásio",
+  "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "cd server && npm run dev",
-    "client": "cd client && npm start",
-    "build": "cd client && npm run build",
-    "install-server": "cd server && npm install",
-    "install-client": "cd client && npm install",
-    "install-all": "npm run install-server && npm run install-client"
-  },
-  "devDependencies": {
-    "concurrently": "^8.0.0"
-  },
-  "keywords": [
-    "gym",
-    "fitness",
-    "pwa",
-    "react",
-    "nodejs"
-  ],
-  "author": "Seu Nome",
-  "license": "MIT",
-  "dependencies": {
-    "chart.js": "^4.4.9",
-    "customize-cra": "^1.0.0",
-    "react": "^18.3.1",
-    "react-app-rewired": "^2.2.1",
-    "react-chartjs-2": "^5.3.0",
-    "react-dom": "^18.3.1",
-    "recharts": "^2.15.3",
-    "workbox-core": "^7.3.0",
-    "workbox-precaching": "^7.3.0",
-    "workbox-routing": "^7.3.0",
-    "workbox-strategies": "^7.3.0",
-    "workbox-webpack-plugin": "^7.3.0"
+    "install:server": "cd server && npm install",
+    "install:client": "cd client && npm install",
+    "install:all": "npm run install:server && npm run install:client",
+    "build": "cd client && npm run build"
   }
 }
