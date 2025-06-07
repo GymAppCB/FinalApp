@@ -59,8 +59,9 @@ app.get('/', (req, res) => {
 app.get('/', (req, res) => {
   res.status(200).send('GymPro API is running and healthy.');
 });
-app.listen(PORT, () => {
-  console.log(`🚀 Server is now listening on port ${PORT}`);
+const HOST = '0.0.0.0'; // This is the critical change
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Server is now listening on http://${HOST}:${PORT}`);
 });
 
 // --- Start Server ---
