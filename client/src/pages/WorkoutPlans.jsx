@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Container, Typography, Button, Box, Grid, Card, CardContent, CardActions, Chip, TextField, InputAdornment, CircularProgress, Skeleton } from '@mui/material';
+import { Container, Typography, Button, Box, Grid, Card, CardContent, CardActions, Chip, TextField, InputAdornment, Skeleton } from '@mui/material';
 import { Add, FitnessCenter, Person, Timer, Search } from '@mui/icons-material';
 import api from '../services/api';
 import NewWorkoutPlanDialog from '../components/dialogs/NewWorkoutPlanDialog';
