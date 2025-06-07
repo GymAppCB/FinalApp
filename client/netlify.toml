@@ -1,0 +1,9 @@
+# client/netlify.toml
+
+# This rule proxies all requests from /api/* on your Netlify site
+# to your Render API server.
+[[redirects]]
+  from = "/api/*"
+  to = "https://gympro-api.onrender.com/api/:splat"
+  status = 200
+  force = true

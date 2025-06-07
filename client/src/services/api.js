@@ -1,7 +1,8 @@
 // client/src/services/api.js
 import axios from 'axios';
 
-const API_BASE_URL = 'https://gympro-api.onrender.com/api'; 
+// Now we make requests to our own site, and Netlify will forward them.
+const API_BASE_URL = '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
