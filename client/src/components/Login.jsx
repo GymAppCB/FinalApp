@@ -76,10 +76,6 @@ const Login = ({ onLogin }) => {
           >
             {loading ? <CircularProgress size={24} color="inherit" /> : 'Entrar'}
           </Button>
-
-          <Typography variant="caption" display="block" textAlign="center" color="textSecondary">
-            Credenciais de teste: joao@gymmanagement.com / 123456
-          </Typography>
         </Box>
       </Paper>
     </Container>
