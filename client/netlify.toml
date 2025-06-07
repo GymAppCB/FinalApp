@@ -1,16 +1,22 @@
 # client/netlify.toml
 
-# This rule proxies all requests from /api/* on your Netlify site
-# to your Render API server.
+# ==================================================
+#  THIS IS THE NEW TEST RULE
+# ==================================================
+[[redirects]]
+  from = "/test"
+  to = "https://www.google.com"
+  status = 302 # This is a temporary redirect
+# ==================================================
+
+# This is the original proxy rule
 [[redirects]]
   from = "/api/*"
-  # THE FIX: We are now pointing to the root of the Render URL.
-  # The full path from the original request will be appended.
-  to = "https://gympro-api.onrender.com/:splat" 
+  to = "https://gympro-api.onrender.com/api/:splat"
   status = 200
-  force = true
-  
-# This is the fallback rule for single-page applications.
+  force = true 
+
+# This is the SPA fallback rule
 [[redirects]]
   from = "/*"
   to = "/index.html"
