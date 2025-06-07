@@ -1,16 +1,16 @@
 # client/netlify.toml
 
-# This is the proxy rule.
-# It tells Netlify: "Any request that starts with /api/,
-# forward it to the Render server."
+# This rule proxies all requests from /api/* on your Netlify site
+# to your Render API server.
 [[redirects]]
   from = "/api/*"
-  to = "https://gympro-api.onrender.com/api/:splat"
+  # THE FIX: We are now pointing to the root of the Render URL.
+  # The full path from the original request will be appended.
+  to = "https://gympro-api.onrender.com/:splat" 
   status = 200
-  force = true 
-
+  force = true
+  
 # This is the fallback rule for single-page applications.
-# It ensures that refreshing on pages like /clients works correctly.
 [[redirects]]
   from = "/*"
   to = "/index.html"
