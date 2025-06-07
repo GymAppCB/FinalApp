@@ -1,7 +1,7 @@
 // server/server.js
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors'); // You already have this
+const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
@@ -9,29 +9,34 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // --- CORS Configuration ---
-// THIS IS THE CRITICAL FIX
 const allowedOrigins = [
-  'http://localhost:3000', // For local development
-  'https://sensational-kulfi-8b5359.netlify.app' // Your deployed frontend
+  'http://localhost:3000',
+  'https://sensational-kulfi-8b5359.netlify.app'
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    return callback(null, true);
-  }
+  },
+  credentials: true, // Allows cookies to be sent
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly allow methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly allow headers
 };
 
-// Use the configured CORS options
+// --- CRITICAL FIX: Handle Preflight Requests ---
+// The browser sends an OPTIONS request first for complex requests like POST.
+// We need to handle it and send back the correct headers.
+app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
+
+// Now, use the CORS middleware for all other requests
 app.use(cors(corsOptions));
 
 
-// --- Middleware ---
+// --- Standard Middleware ---
 app.use(express.json());
 
 // --- Database Connection ---
